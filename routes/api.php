@@ -16,3 +16,4 @@ use App\Http\Controllers\API\AuthController;
 */
 
 Route::post('/register', '\App\Http\Controllers\API\AuthController@register')->name('register');
+Route::post('/login', '\App\Http\Controllers\API\AuthController@login')->name('login');

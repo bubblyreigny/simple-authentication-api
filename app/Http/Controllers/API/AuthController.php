@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
@@ -28,7 +29,7 @@ class AuthController extends Controller
         $user = User::create([
             'first_name' => $request->first_name,
             'last_name' => $request->last_name,
-            'email' => $request->last_name,
+            'email' => $request->email,
             'username' => $request->username,
             'address' => $request->address ,
             'password' => bcrypt($request->password),
@@ -38,5 +39,21 @@ class AuthController extends Controller
         $token = $user->createToken('PassportAuthToken')->accessToken;
 
         return response()->json([ 'token' => $token ], 200);
+    }
+
+    public function login (Request $request) 
+    {
+        $data = [
+            'email' => $request->email,
+            'password' => $request->password
+        ];
+
+        if (Auth::attempt($data)) {
+            $user = Auth::user();
+            $token = $user->createToken('PassportAuthToken')->accessToken;
+            return response()->json(['token' => $token], 200);
+        } else {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
     }
 }
