@@ -2,7 +2,10 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Actions\Auth\AuthActions;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\API\Auth\RegisterUserRequest;
+use App\Http\Requests\API\User\UserRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
@@ -10,6 +13,15 @@ use Illuminate\Support\Facades\Validator;
 
 class AuthController extends Controller
 {
+
+    protected AuthActions $authActions;
+
+    public function __construct(
+        AuthActions $authActions,
+    ) {
+        $this->authActions = $authActions;
+    }
+
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
@@ -26,19 +38,9 @@ class AuthController extends Controller
             return response()->json(['error' => $validator->errors()], 422);
         }
 
-        $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'username' => $request->username,
-            'address' => $request->address ,
-            'password' => bcrypt($request->password),
-            'postcode' => $request->postcode,
-        ]);
+        $user = $this->authActions->handleUserRegistration($request->toArray());
 
-        $token = $user->createToken('PassportAuthToken')->accessToken;
-
-        return response()->json([ 'token' => $token ], 200);
+        return response()->json($user, 200);
     }
 
     public function login (Request $request) 

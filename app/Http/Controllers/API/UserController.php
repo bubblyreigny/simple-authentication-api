@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Actions\User\UserActions;
 use App\Http\Controllers\API\BaseController;
+use App\Http\Requests\API\User\UserRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
 use App\Repositories\User\UserRepository;
@@ -30,6 +31,12 @@ class UserController extends BaseController
      */
     protected UserRepository $userRepository;
 
+    /**
+     * UserController constructor.
+     * 
+     * @param UserActions $userActions
+     * @param UserRepository $userRepository
+     */
     public function __construct(
         UserActions $userActions,
         UserRepository $userRepository
@@ -70,11 +77,11 @@ class UserController extends BaseController
     /**
      * Create a new user.
      *
-     * @param Request $request
+     * @param UserRequest $request
      * 
-     * @return JsonResponse|Fractal
+     * @return Fractal
      */
-    public function store(Request $request): JsonResponse|Fractal
+    public function store(UserRequest $request): Fractal
     {
         $result = $this->userActions->handleRecordCreation($request->toArray());
 
@@ -87,9 +94,9 @@ class UserController extends BaseController
      * @param Request $request
      * @param int $id
      * 
-     * @return JsonResponse|Fractal
+     * @return Fractal
      */
-    public function update(Request $request, int $id): JsonResponse|Fractal 
+    public function update(UserRequest $request, int $id): Fractal 
     {
         $result = $this->userActions->handleRecordUpdate($id, $request->toArray());
 
