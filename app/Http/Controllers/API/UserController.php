@@ -6,6 +6,7 @@ use App\Actions\User\UserActions;
 use App\Http\Controllers\API\BaseController;
 use Illuminate\Http\Request;
 use App\Models\User;
+use App\Repositories\User\UserRepository;
 use App\Transformers\User\UserTransformer;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\DB;
@@ -15,12 +16,26 @@ use Throwable;
 
 class UserController extends BaseController
 {
-
+    /**
+     * Available actions on the user model.
+     * 
+     * @var UserActions
+     */
     protected UserActions $userActions;
 
-    public function __construct(UserActions $userActions)
-    {
+    /**
+     * Available queries for the user model.
+     * 
+     * @var UserRepository
+     */
+    protected UserRepository $userRepository;
+
+    public function __construct(
+        UserActions $userActions,
+        UserRepository $userRepository
+    ) {
         $this->userActions = $userActions;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -32,7 +47,7 @@ class UserController extends BaseController
      */
     public function index(Request $request): Fractal
     {
-        $user = User::all();
+        $user = $this->userRepository->getAllUsers();
 
         return $this->fractal($user, new UserTransformer);
     }
@@ -47,7 +62,7 @@ class UserController extends BaseController
      */
     public function show(Request $request, int $id): Fractal
     {
-        $user = User::findOrFail($id);
+        $user = $this->userRepository->showUser($id);
 
         return $this->fractal($user, new UserTransformer);
     }
