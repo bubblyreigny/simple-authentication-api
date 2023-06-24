@@ -25,5 +25,6 @@ Route::middleware('auth:api')->group(function() {
     Route::post('user/store', '\App\Http\Controllers\API\UserController@store')->name('store');
     Route::get('user/{id}', '\App\Http\Controllers\API\UserController@show')->name('show');
     Route::post('user/{id}/update', '\App\Http\Controllers\API\UserController@update')->name('update');
+    Route::delete('user/{id}/delete', '\App\Http\Controllers\API\UserController@delete')->name('delete');
 });
 

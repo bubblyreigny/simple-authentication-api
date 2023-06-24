@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Actions\User\UserActions;
 use App\Http\Controllers\API\BaseController;
 use Illuminate\Http\Request;
 use App\Models\User;
@@ -14,6 +15,14 @@ use Throwable;
 
 class UserController extends BaseController
 {
+
+    protected UserActions $userActions;
+
+    public function __construct(UserActions $userActions)
+    {
+        $this->userActions = $userActions;
+    }
+
     /**
      * Display all users available.
      * 
@@ -52,31 +61,9 @@ class UserController extends BaseController
      */
     public function store(Request $request): JsonResponse|Fractal
     {
-        $validator = Validator::make($request->all(), [
-            'first_name' => 'required|min:2',
-            'last_name' => 'required|min:2',
-            'email' => 'required|email|unique:users,email',
-            'username' => 'required|unique:users,username',
-            'address' => 'required' ,
-            'password' => 'required|min:8',
-            'postcode' => 'required|numeric',
-        ]);
+        $result = $this->userActions->handleRecordCreation($request->toArray());
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 422);
-        }
-
-        $user = User::create([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'username' => $request->username,
-            'address' => $request->address ,
-            'password' => bcrypt($request->password),
-            'postcode' => $request->postcode,
-        ]);
-
-        return $this->fractal($user, new UserTransformer);
+        return $this->fractal($result, new UserTransformer);
     }
 
     /**
@@ -89,32 +76,23 @@ class UserController extends BaseController
      */
     public function update(Request $request, int $id): JsonResponse|Fractal 
     {
-        $validator = Validator::make($request->all(), [
-            'first_name' => 'required|min:2',
-            'last_name' => 'required|min:2',
-            'email' => 'required|email|unique:users,email,'.$id,
-            'username' => 'required|unique:users,username,'.$id,
-            'address' => 'required' ,
-            'password' => 'required|min:8',
-            'postcode' => 'required|numeric',
-        ]);
+        $result = $this->userActions->handleRecordUpdate($id, $request->toArray());
 
-        if ($validator->fails()) {
-            return response()->json(['error' => $validator->errors()], 422);
-        }
+        return $this->fractal($result, new UserTransformer);
+    }
 
-        $user = User::findOrFail($id);
-        
-        $user->update([
-            'first_name' => $request->first_name,
-            'last_name' => $request->last_name,
-            'email' => $request->email,
-            'username' => $request->username,
-            'address' => $request->address ,
-            'password' => bcrypt($request->password),
-            'postcode' => $request->postcode,
-        ]);
+    /**
+     * Delete specific user.
+     * 
+     * @param Request $request
+     * @param int $id
+     * 
+     * @return JsonResponse
+     */
+    public function delete(Request $request, int $id): JsonResponse|Fractal
+    {
+        $result = $this->userActions->handleRecordDeletion($id);
 
-        return $this->fractal($user, new UserTransformer);
+        return $this->fractal($result, new UserTransformer);
     }
 }
