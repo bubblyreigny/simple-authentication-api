@@ -2,29 +2,55 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Controllers\Controller;
+use App\Http\Controllers\API\BaseController;
 use Illuminate\Http\Request;
 use App\Models\User;
-use Illuminate\Support\Facades\Auth;
+use App\Transformers\User\UserTransformer;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
+use Spatie\Fractal\Fractal;
+use Throwable;
 
-class UserController extends Controller
+class UserController extends BaseController
 {
-    public function index(Request $request)
+    /**
+     * Display all users available.
+     * 
+     * @param Request $request
+     * 
+     * @return Fractal
+     */
+    public function index(Request $request): Fractal
     {
         $user = User::all();
 
-        return response()->json([ 'data' => $user ]);
+        return $this->fractal($user, new UserTransformer);
     }
 
-    public function show(Request $request, int $id) 
+    /**
+     * Display the specific user.
+     * 
+     * @param Request $request
+     * @param int $id
+     * 
+     * @return Fractal
+     */
+    public function show(Request $request, int $id): Fractal
     {
         $user = User::findOrFail($id);
 
-        return response()->json([ 'data' => $user ]);
+        return $this->fractal($user, new UserTransformer);
     }
 
-    public function store(Request $request)
+    /**
+     * Create a new user.
+     *
+     * @param Request $request
+     * 
+     * @return JsonResponse|Fractal
+     */
+    public function store(Request $request): JsonResponse|Fractal
     {
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|min:2',
@@ -50,23 +76,28 @@ class UserController extends Controller
             'postcode' => $request->postcode,
         ]);
 
-        return response()->json([
-            'data' => $user            
-        ], 200);
+        return $this->fractal($user, new UserTransformer);
     }
 
-    public function update(Request $request, int $id) 
+    /**
+     * Update specific user.
+     *
+     * @param Request $request
+     * @param int $id
+     * 
+     * @return JsonResponse|Fractal
+     */
+    public function update(Request $request, int $id): JsonResponse|Fractal 
     {
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|min:2',
             'last_name' => 'required|min:2',
-            'email' => 'required|email|unique:users,email',
-            'username' => 'required|unique:users,username',
+            'email' => 'required|email|unique:users,email,'.$id,
+            'username' => 'required|unique:users,username,'.$id,
             'address' => 'required' ,
             'password' => 'required|min:8',
             'postcode' => 'required|numeric',
         ]);
-
 
         if ($validator->fails()) {
             return response()->json(['error' => $validator->errors()], 422);
@@ -84,8 +115,6 @@ class UserController extends Controller
             'postcode' => $request->postcode,
         ]);
 
-        return response()->json([
-            'data' => $user            
-        ], 200);
+        return $this->fractal($user, new UserTransformer);
     }
 }
