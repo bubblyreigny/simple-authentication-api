@@ -19,7 +19,8 @@ return new class extends Migration
             $table->string('username');
             $table->string('password');
             $table->text('address');
-            $table->unsignedInteger('postcode');
+            $table->string('postcode');
+            $table->enum('user_type', ['admin', 'user'])->default('user');
             $table->timestamp('email_verified_at')->nullable();
             $table->rememberToken();
             $table->timestamps();

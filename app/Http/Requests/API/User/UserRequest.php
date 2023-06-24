@@ -27,6 +27,7 @@ class UserRequest extends FormRequest
      */
     public function rules(): array
     {
+        $rules = [];
         if ($this->method() === Request::METHOD_POST && in_array(request()->route()->getName(), ['register', 'store'])) {
 
             $rules = [
@@ -36,7 +37,7 @@ class UserRequest extends FormRequest
                 'username' => 'required|unique:users,username',
                 'address' => 'required' ,
                 'password' => 'required|min:8',
-                'postcode' => 'required|numeric',
+                'postcode' => 'required',
             ];
         }
 
@@ -48,7 +49,7 @@ class UserRequest extends FormRequest
                 'username' => 'required|unique:users,username,'.$this->id,
                 'address' => 'required' ,
                 'password' => 'required|min:8',
-                'postcode' => 'required|numeric',
+                'postcode' => 'required',
             ];
         }
 

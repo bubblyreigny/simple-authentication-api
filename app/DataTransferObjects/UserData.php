@@ -13,7 +13,7 @@ class UserData
         public readonly string $username,
         public readonly string $address,
         public readonly string $password,
-        public readonly int $postcode
+        public readonly string $postcode
     ) {
 
     }

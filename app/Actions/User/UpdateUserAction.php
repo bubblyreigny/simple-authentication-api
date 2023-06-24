@@ -15,7 +15,9 @@ class UpdateUserAction
      */
     public function execute(int $id, UserData $userData): User 
     {
-        $user = User::findOrFail($id)->update([
+        $user = User::findOrFail($id);
+
+        $user->update([
             'first_name' => $userData->first_name,
             'last_name' => $userData->last_name,
             'email' => $userData->email,
@@ -25,6 +27,6 @@ class UpdateUserAction
             'postcode' => $userData->postcode,
         ]);
 
-        return $user;
+        return $user->fresh();
     }
 }
