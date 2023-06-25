@@ -67,7 +67,9 @@ DB_USERNAME=your_mysql_user
 DB_PASSWORD=your_mysql_user_password
 ```
 <br>
+
 Since mysql is the database management system that will be used it's the value of the `DB_CONNECTION`. The value of `DB_CONNECTION` should always related to the database management system you're intending to use. `DB_HOST` value is set to the ip address of the machine's localhost since it is where the development will run. `DB_PORT` is set to `3306` since it is the default port that MySQL listens to. The rest of the configuration is pretty much self explanatory.
+
 <br>
 <br>
 
@@ -85,6 +87,7 @@ The console will take a while before it finishes downloading the dependencies, b
 <br>
 Run this command to create the tables into the database as defined. The `fresh` command will drop all the tables in the database (if there's any) to ensure that there's no duplicates in configuration that may result in an error — the `--seed` flag is also added to simulataneously inject preloaded values on some database tables, which will be in use later on.
 <br>
+
 ```
 php artisan migrate:fresh --seed
 
@@ -129,6 +132,7 @@ php artisan serve --port=9000
 
 <br>
 <br>
+
 ### Final notes
 
 The application comes with a default system administrator account that was loaded after seeding. The account cannot be deleted by any case. Credentials are as follows
