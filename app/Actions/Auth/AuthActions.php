@@ -2,6 +2,7 @@
 
 namespace App\Actions\Auth;
 
+use App\DataTransferObjects\LoginData;
 use App\DataTransferObjects\UserData;
 use Illuminate\Support\Facades\DB;
 
@@ -17,6 +18,14 @@ class AuthActions
             username: $data['username'],
             password: $data['password'],
             postcode: $data['postcode']
+        )));
+    }
+
+    public function handleUserLogin(array $data): array|object 
+    {
+        return DB::transaction(fn () => app(LoginUserAction::class)->execute(new LoginData(
+            email: $data['email'],
+            password: $data['password']
         )));
     }
 }

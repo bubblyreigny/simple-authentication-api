@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API;
 
 use App\Actions\Auth\AuthActions;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\API\Auth\LoginRequest;
 use App\Http\Requests\API\Auth\RegisterUserRequest;
 use App\Http\Requests\API\User\UserRequest;
 use Illuminate\Http\Request;
@@ -43,21 +44,10 @@ class AuthController extends Controller
         return response()->json($user, 200);
     }
 
-    public function login (Request $request) 
+    public function login(LoginRequest $request) 
     {
-        $data = [
-            'email' => $request->email,
-            'password' => $request->password
-        ];
+        $result = $this->authActions->handleUserLogin($request->toArray());
 
-        if (Auth::attempt($data)) {
-            $user = Auth::user();
-            $token = $user->createToken('PassportAuthToken')->accessToken;
-            return response()->json([
-                'user' => $user,
-                'token' => $token], 200);
-        } else {
-            return response()->json(['message' => 'Invalid credentials'], 401);
-        }
+        return response()->json($result, $result['status']);
     }
 }
