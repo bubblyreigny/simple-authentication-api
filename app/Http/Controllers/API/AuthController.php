@@ -57,7 +57,7 @@ class AuthController extends Controller
                 'user' => $user,
                 'token' => $token], 200);
         } else {
-            return response()->json(['error' => 'Unauthorized'], 401);
+            return response()->json(['message' => 'Invalid credentials'], 401);
         }
     }
 }

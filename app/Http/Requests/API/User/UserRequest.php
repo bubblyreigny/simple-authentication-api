@@ -41,7 +41,7 @@ class UserRequest extends FormRequest
             ];
         }
 
-        if ($this->method() === Request::METHOD_POST && strpos(request()->route()->getName(), 'update')) {
+        if ($this->method() === Request::METHOD_PATCH && request()->route()->getName() == 'update') {
             $rules = [
                 'first_name' => 'required|min:2',
                 'last_name' => 'required|min:2',

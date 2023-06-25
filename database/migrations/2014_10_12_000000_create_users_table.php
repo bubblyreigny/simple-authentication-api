@@ -22,6 +22,7 @@ return new class extends Migration
             $table->string('postcode');
             $table->enum('user_type', ['admin', 'user'])->default('user');
             $table->timestamp('email_verified_at')->nullable();
+            $table->softDeletes();
             $table->rememberToken();
             $table->timestamps();
         });
