@@ -19,6 +19,7 @@ use App\Http\Controllers\API\AuthController;
 
 Route::post('register', '\App\Http\Controllers\API\AuthController@register')->name('register');
 Route::post('login', '\App\Http\Controllers\API\AuthController@login')->name('login');
+Route::middleware('auth:api')->post('logout', '\App\Http\Controllers\API\AuthController@logout')->name('logout');
 
 Route::middleware('auth:api')->group(function() {
     Route::get('user', '\App\Http\Controllers\API\UserController@index')->name('index');

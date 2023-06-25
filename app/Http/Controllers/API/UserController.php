@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Repositories\User\UserRepository;
 use App\Transformers\User\UserTransformer;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Spatie\Fractal\Fractal;

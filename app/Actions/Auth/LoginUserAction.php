@@ -13,8 +13,11 @@ class LoginUserAction
             'email' => $loginData->email,
             'password' => $loginData->password 
         ];
+        
 
-        if (Auth::attempt($data)) {
+        if ($auth = Auth::attempt($data)) {
+            Auth::login(Auth::getProvider()->retrieveByCredentials($data));
+
             $user = Auth::user();
             $token = $user->createToken('PassportAuthToken')->accessToken;
             

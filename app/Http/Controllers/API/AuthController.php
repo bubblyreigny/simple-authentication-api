@@ -9,6 +9,7 @@ use App\Http\Requests\API\Auth\RegisterUserRequest;
 use App\Http\Requests\API\User\UserRequest;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
 
@@ -23,7 +24,14 @@ class AuthController extends Controller
         $this->authActions = $authActions;
     }
 
-    public function register(Request $request)
+    /**
+     * Register user request.
+     * 
+     * @param Request $request
+     * 
+     * @return JsonResponse
+     */
+    public function register(Request $request): JsonResponse
     {
         $validator = Validator::make($request->all(), [
             'first_name' => 'required|min:2',
@@ -44,10 +52,28 @@ class AuthController extends Controller
         return response()->json($user, 200);
     }
 
-    public function login(LoginRequest $request) 
+    /**
+     * Login request.
+     * 
+     * @param LoginRequest $request
+     * 
+     * @return JsonResponse
+     */
+    public function login(LoginRequest $request): JsonResponse 
     {
         $result = $this->authActions->handleUserLogin($request->toArray());
 
         return response()->json($result, $result['status']);
+    }
+
+    /**
+     * @param Request $request
+     * 
+     * @return JsonResponse
+     */
+    public function logout(Request $request): JsonResponse
+    {
+        $request->user()->tokens()->each(fn ($token) => $token->revoke());
+        return response()->json([ 'message' => 'Logout Success'], 200);
     }
 }
