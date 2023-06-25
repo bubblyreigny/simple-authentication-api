@@ -15,6 +15,8 @@ class UserSeeder extends Seeder
     public function run(): void
     {
         UserFactory::new([
+            'first_name' => 'System',
+            'last_name' => 'Administrator',
             'email' => 'system@system.com',
             'password' => bcrypt('system@secret'),
             'username' => 'system_administrator',
