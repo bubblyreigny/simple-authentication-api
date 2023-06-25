@@ -1,66 +1,138 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# simple-authentication-api
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+# Prerequisites
+`php.8.1^` 
+`composer 2.5.0^`
+`mysql`
 
-## About Laravel
+### Environment configuration for the application
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+Laravel comes with an example configuration for the `environment variables` located on `.env.example` on the project's root directory. Open the contents of the `.env.example` and paste it on a new file named `.env`. 
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
 
-## Learning Laravel
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+A console command is also available to copy the contents of the `.env.example` to `.env`
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+```
+cp .env.example .env
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
 
-## Laravel Sponsors
+After setting up the intial environment variables it's already good to go. The `.env` file can be altered to cater some configurations later on.
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
 
-### Premium Partners
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+### Database Setup
 
-## Contributing
+Create a database for the project's data storage through the `phymyadmin interface`
+see the indicated link below for reference.
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+https://phppot.com/mysql/phpmyadmin-create-database/
 
-## Code of Conduct
+or create the database via `mysql cli`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
 
-## Security Vulnerabilities
+1. Login to a mysql user
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+``` 
+mysql -u root -p
+```
 
-## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+2. create the databases by running the following command and specifying the name of the database
+
+```
+CREATE DATABASE your_database_name;
+
+```
+
+
+3. The database will be created and ready for use. Exit the mysql cli right after.
+```
+exit
+````
+
+
+4. On the `.env` that was created initially. Configure the variables to bind the application to a database for record storage, variable values should be something similar.
+
+
+
+```
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=your_database_name
+DB_USERNAME=your_mysql_user
+DB_PASSWORD=your_mysql_user_password
+```
+
+Since mysql is the database management system that will be used it's the value of the `DB_CONNECTION`. The value of `DB_CONNECTION` should always related to the database management system you're intending to use. `DB_HOST` value is set to the ip address of the machine's localhost since it is where the development will run. `DB_PORT` is set to `3306` since it is the default port that MySQL listens to. The rest of the configuration is pretty much self explanatory.
+
+
+### Installing dependencies
+
+To install the dependencies or pakakges that the application needs. We need to download it from the composer repository by running the command on the console.
+
+
+```
+composer i
+
+```
+
+The console will take a while before it finishes downloading the dependencies, but once it finishes the application is pretty much good to go. 
+
+
+
+### Database migration and seeding
+
+
+Run this command to create the tables into the database as defined. The `fresh` command will drop all the tables in the database (if there's any) to ensure that there's no duplicates in configuration that may result in an error — the `--seed` flag is also added to simulataneously inject preloaded values on some database tables, which will be in use later on.
+
+```
+php artisan migrate:fresh --seed
+
+```
+
+### Laravel Passport
+
+
+Laravel passport is a package that uses Open Authorization 2.0 server implementation for authenticating APIs using Laravel. This is how users 
+will be granted access to the application.
+
+
+To generate secure access tokens for your application, Passport requires some encryption keys and two clients known as Laravel Personal Access Client and Laravel Password Grant Client. To create these keys and encryption clients, run the following command:
+
+```
+php artisan passport:install
+```
+
+After installing the passport the application is already good for usage.
+
+
+
+
+### Running the application
+
+
+Since the app is already configured, it's now ready for access in our local server. To run the app run the command
+
+```
+php artisan serve
+
+```
+
+By default the application will run on `localhost:8000`. If you want to run it on a different port just add the `--port` flag and type the port desired.
+
+```
+php artisan serve --port=9000
+```
+
+### Final notes
+
+The application comes with a default system administrator account that was loaded after seeding. The account cannot be deleted by any case. Credentials are as follows
+
+```
+email: system@system.com
+password: system@secret
+```
