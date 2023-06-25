@@ -90,7 +90,6 @@ Run this command to create the tables into the database as defined. The `fresh` 
 
 ```
 php artisan migrate:fresh --seed
-
 ```
 <br>
 <br>
@@ -120,7 +119,6 @@ Since the app is already configured, it's now ready for access in our local serv
 
 ```
 php artisan serve
-
 ```
 <br>
 
