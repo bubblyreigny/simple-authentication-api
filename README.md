@@ -1,6 +1,6 @@
 # simple-authentication-api
 
-# Prerequisites
+# Pre-requisites
 `php.8.1^` 
 `composer 2.5.0^`
 `mysql`
